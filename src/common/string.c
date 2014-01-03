@@ -7,3 +7,12 @@ void *memset(void *s, int c, size_t size)
     tmp[i] = c;
   return s;
 }
+
+int strlen(const char *str)
+{
+  int i = 0;
+
+  while (str[i])
+    ++i;
+  return i;
+}

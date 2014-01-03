@@ -2,35 +2,34 @@
 #include "io/lowlevel_io.h"
 #include "console/video_frame_buffer.h"
 
-// Make it thread safe when synch mechanism available
+/* Make it thread safe when synch mechanism available */
 static struct s_vfb g_vfb = {
   .pos = { .x = 0, .y = 0},
-  .color = 0x14,
+  .color = 0x0F,
   .base = VID_FRAME_BUF,
 };
 
-void vfb_putc(char c)
+static inline void _putc(char c)
 {
-  g_vfb.base[g_vfb.pos.y * NB_COL + g_vfb.pos.x] = (g_vfb.color << 8) | c;
+  g_vfb.base[g_vfb.pos.y * NB_COL + g_vfb.pos.x++] = (g_vfb.color << 8) | c;
+  if (g_vfb.pos.x == NB_COL)
+    {
+      g_vfb.pos.x = 0;
+      ++g_vfb.pos.y;
+    }
 }
 
-void vfb_putnbr(int nbr)
+ssize_t vfb_write(const char *str, size_t count)
 {
-  if (nbr < 0)
-    {
-      vfb_putc('-');
-      vfb_putnbr(nbr / -10);
-      vfb_putc(-(nbr % 10) + '0');
-    }
-  else
-    {
-      if (nbr > 10)
-	vfb_putnbr(nbr / 10);
-      vfb_putc((nbr % 10) + '0');      
-    }
+  ssize_t i;
+  for (i = 0; i < (ssize_t)count; ++i)
+    _putc(str[i]);
+  return i;
 }
 
 void vfb_clear(void)
 {
   memset(g_vfb.base, 0, NB_COL * NB_LINE * 2);
+  g_vfb.pos.x = 0;
+  g_vfb.pos.y = 0;
 }
