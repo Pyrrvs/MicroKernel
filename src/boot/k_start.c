@@ -1,4 +1,10 @@
+#include "console/console.h"
+
 int k_start(void)
 {
-  return 0xDEAD0000;
+  while (1)
+    {
+      console_putc('#');
+    }
+  return 0xBABA;
 }
