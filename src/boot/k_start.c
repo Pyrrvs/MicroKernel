@@ -4,6 +4,6 @@
 int k_start(void)
 {
   vfb_clear();
-  puts("#toto");
+  printk("#toto");
   return 0xBABA;
 }

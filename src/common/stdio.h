@@ -4,5 +4,6 @@
 void putc(char c);
 void puts(const char *str);
 void putnbr(int nbr);
+void printk(char const *s, ...);
 
 #endif

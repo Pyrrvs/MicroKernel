@@ -1,4 +1,4 @@
-SOURCES=src/boot/boot.o src/boot/k_start.o src/io/lowlevel_io.o src/console/video_frame_buffer.o src/common/string.o src/common/stdio.o src/io/screen_io.o
+SOURCES=src/boot/boot.o src/boot/k_start.o src/io/lowlevel_io.o src/console/video_frame_buffer.o src/common/string.o src/common/stdio.o src/io/screen_io.o src/common/printk.o
 CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector -Isrc/ -std=gnu99
 LDFLAGS=-Tsrc/link.ld
 ASFLAGS=-felf
