@@ -1,10 +1,8 @@
-#include "console/console.h"
+#include "console/video_frame_buffer.h"
 
 int k_start(void)
 {
-  while (1)
-    {
-      console_putc('#');
-    }
+  vfb_clear();
+  vfb_putc('#');
   return 0xBABA;
 }
