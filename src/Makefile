@@ -1,4 +1,4 @@
-SOURCES=boot.o k_start.o
+SOURCES=boot/boot.o boot/k_start.o
 CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
@@ -6,7 +6,7 @@ ASFLAGS=-felf
 all: $(SOURCES) link
 
 clean:
-	-rm *.o kernel
+	-rm -f boot/*.o kernel
 
 link:
 	ld $(LDFLAGS) -o kernel $(SOURCES)
