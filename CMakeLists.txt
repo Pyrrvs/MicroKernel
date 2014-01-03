@@ -1,16 +1,22 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(Kernel)
 
+SET(CMAKE_VERBOSE_MAKEFILE on)
+
+
 SET(CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
 
 ENABLE_LANGUAGE(ASM_NASM)
 
+INCLUDE_DIRECTORIES(src/)
+
 SET(CMAKE_C_FLAGS "-march=i386 -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector")
-SET(CMAKE_C_LINK_FLAGS  "-T${CMAKE_SOURCE_DIR}/src/link.ld")
+#SET(CMAKE_C_LINK_FLAGS  
 
 SET(ASM_SRCS src/boot/boot.s)
-SET(C_SRCS src/boot/k_start.c)
+SET(C_SRCS src/boot/k_start.c src/console/console.c src/io/lowlevel_io.c)
 
 SET_PROPERTY(SOURCE ${ASM_SRCS} PROPERTY LANGUAGE ASM_NASM)
 
 ADD_EXECUTABLE(kernel.bin ${ASM_SRCS} ${C_SRCS})
+SET(CMAKE_LINKER  "/usr/bin/ld -T${CMAKE_SOURCE_DIR}/src/link.ld ${ASM_SRCS} ${C_SRCS}")
