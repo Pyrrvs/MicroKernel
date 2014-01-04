@@ -4,6 +4,8 @@
 int k_start(void)
 {
   vfb_clear();
-  printk("#toto %d", 42);
+  char *str = "titi";
+  putnbr((int)str);
+  printk("#toto %s", str);
   return 0xBABA;
 }
