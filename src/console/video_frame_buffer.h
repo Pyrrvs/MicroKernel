@@ -14,6 +14,9 @@ struct s_vfb {
   } pos;
   uint8_t color;
   uint16_t *base;
+  char is_esc_seq;
+  char esc_buf[16];
+  int esc_buf_ndx;
 };
 
 ssize_t vfb_write(const char *str, size_t count);
