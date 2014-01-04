@@ -4,6 +4,8 @@
 int k_start(void)
 {
   vfb_clear();
-  printk("#toto %d", 42);
+  printk("Kernel down and running");
+  printk("\rKernel up and running  \n");
+  printk("#toto %d\n", 42);
   return 0xBABA;
 }
