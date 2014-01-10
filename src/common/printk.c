@@ -15,11 +15,11 @@ void printk(char const *s, ...)
   for (i = 0; i < len; ++i)
     {
       if (s[i] == '%')
-	{
-	  i = i + 1;
-	  switch (s[i])
-	    {
-	    case 'd':
+	     {
+	       i = i + 1;
+	       switch (s[i])
+          {
+      case 'd':
 	      val = va_arg(args, int);
 	      putnbr(val);
 	      break;
@@ -35,6 +35,6 @@ void printk(char const *s, ...)
 	    }
 	}
       else
-	putc(s[i]);
+		putc(s[i]);
     }
 }
