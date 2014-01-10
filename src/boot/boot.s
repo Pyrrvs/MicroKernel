@@ -11,11 +11,13 @@ MBOOT_HEADER_MAGIC	equ 0x1BADB002 ; Multiboot Magic value
 MBOOT_HEADER_FLAGS	equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
 MBOOT_CHECKSUM		equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
-ALIGN	4
+ALIGN 4
 multiboot_header:
 	dd  MBOOT_HEADER_MAGIC
 	dd  MBOOT_HEADER_FLAGS
 	dd  MBOOT_CHECKSUM
+
+;;; TODO Add stack
 
 [GLOBAL k_asm_entry]            ; Kernel ASM entry point.
 k_asm_entry:
@@ -24,3 +26,5 @@ k_asm_entry:
 	call gdt_init		    ; Initialise the GDT
 	call k_start                ; Call kernel start function
 	jmp $                       ; Infinite loop after kernel returns
+
+

@@ -3,34 +3,23 @@
 
 extern void gdt_load(void *ptr);
 
-gdt_t gdt;
-
-static void gdt_add_descr(int8_t ndx, uint32_t base, uint32_t limit,
-			  uint8_t access, uint8_t gran)
-{
-  gdt.table[ndx].base_low    = (base & 0xFFFF);
-  gdt.table[ndx].base_middle = (base >> 16) & 0xFF;
-  gdt.table[ndx].base_high   = (base >> 24) & 0xFF;
-  gdt.table[ndx].limit_low   = (limit & 0xFFFF);
-  gdt.table[ndx].granularity = (limit >> 16) & 0x0F;
-  gdt.table[ndx].granularity |= gran & 0xF0;
-  gdt.table[ndx].access      = access;
-}
+gdt_t gdt = {
+  .ptr = {
+    .limit = sizeof(gdt.table) - 1,
+    .base = (uint32_t)gdt.table,
+  },
+  .table = {
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0xFF, 0xFF, 0, 0, 0, 0x9A, 0xCF, 0}, /* Ring 0 CS */
+    { 0xFF, 0xFF, 0, 0, 0, 0x92, 0xCF, 0}, /* Ring 0 DS */
+    { 0xFF, 0xFF, 0, 0, 0, 0xFA, 0xCB, 0}, /* Ring 3 CS */
+    { 0xFF, 0xFF, 0, 0, 0, 0xF2, 0xCB, 0}, /* Ring 3 DS */
+  }
+};
 
 void gdt_init(void)
 {
   puts("Loading GDT\n");
-  /* Add segment descriptors to GDT */
-  gdt_add_descr(0, 0, 0, 0, 0);
-  gdt_add_descr(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Ring 0 CS
-  gdt_add_descr(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Ring 0 DS
-  gdt_add_descr(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // Ring 3 CS
-  gdt_add_descr(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // Ring 3 DS
-
-  /* Set GDT pointer*/
-  gdt.ptr.limit = sizeof(gdt.table) - 1;
-  gdt.ptr.base = (uint32_t)gdt.table;
-
   /* Load the GDT */
   gdt_load(&gdt.ptr);
   puts("GDT loaded\n");  
