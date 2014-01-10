@@ -7,7 +7,7 @@
 /* Make it thread safe when synch mechanism available */
 static struct s_vfb g_vfb = {
   .pos = { .x = 0, .y = 0},
-  .color = 0x01,
+  .color = 0x07,
   .base = VID_FRAME_BUF,
   .is_esc_seq = 0,
   .esc_buf_ndx = 0,
