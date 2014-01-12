@@ -28,7 +28,6 @@ void idt_set_entry(uint8_t num,
 
 void idt_init(void)
 {
-  puts("Initializing IDT\n");
   memset((void*)idt.table, 0, sizeof(idt.table));
   for (uint8_t i = 0; i < (sizeof(isr_table) / sizeof(*isr_table)); ++i)
     idt_set_entry(i, (uint32_t)isr_table[i], 0x08, 0x8E);

@@ -13,8 +13,8 @@ int k_start(int code, multiboot_info_t * mBootInfo)
   printk("Kernel up and running\n");
   asm volatile ("int $0x0");
   asm volatile ("int $0x3");
-  /* printk(WARN_COLOR "Next interruption will cause a panic\n" DEF_COLOR); */
-  /* asm volatile ("int $0x20"); */
+  printk(WARN_COLOR "Next interruption will cause a panic\n" DEF_COLOR);
+  asm volatile ("int $0x20");
   printk("still alive\n");
   return 0xBABA;
 }

@@ -1,13 +1,11 @@
 [BITS 32]
-[EXTERN putnbr]
-[EXTERN putc]
 [EXTERN vfb_clear]
-[EXTERN gdt_init]
+[EXTERN gdt_load]
 [EXTERN idt_init]
 [EXTERN k_start]                ; Kernel C start function.
 
 ;;; Constants
-STACK_SIZE		equ 0x4000
+STACK_SIZE		equ 0x1000
 MBOOT_PAGE_ALIGN	equ 1<<0    ; Load kernel and modules on a page boundary
 MBOOT_MEM_INFO		equ 1<<1    ; Provide your kernel with memory info
 MBOOT_HEADER_MAGIC	equ 0x1BADB002 ; Multiboot Magic value
@@ -16,8 +14,8 @@ MBOOT_CHECKSUM		equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
 [SECTION .bss]
 startupStack:
-	align 4
-	resb STACK_SIZE	;Allocate 16k of startup stack
+	align 4096
+	resb STACK_SIZE	;Allocate 4k of startup stack
 topStartupStack:
 	
 [SECTION .text]
@@ -35,7 +33,7 @@ k_asm_entry:
 	push ebx
 	push eax
 	call vfb_clear
-	call gdt_init		    ; Initialise the GDT
+	call gdt_load		    ; Initialise the GDT
 	call idt_init		    ; Initialise the IDT
 	call k_start                ; Call kernel start function
 	pop eax
