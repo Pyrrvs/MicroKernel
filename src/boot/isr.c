@@ -1,7 +1,8 @@
 #include "boot/isr.h"
 #include "common/stdio.h"
+#include "common/kernel.h"
 
-isr_ptr isr_table[] = {
+isr_ptr isr_table[32] = {
   isr0,
   isr1,
   isr2,
@@ -36,7 +37,18 @@ isr_ptr isr_table[] = {
   isr31
 };
 
-void isr_handler()
+void isr_handler(registers_t regs)
 {
-  puts("...\n");
+  puts(INFO_COLOR "interrupt handler\n" DEF_COLOR);
+  puts("Interrupt number: ");
+  putnbr(regs.int_no);
+  putc('\n');
+  if (regs.err_code)
+    {
+      puts("Error code: ");
+      putnbr(regs.err_code);
+      putc('\n');
+    }
+  if (regs.int_no == 0xD)
+    PANIC("General Protection Fault\n");
 }

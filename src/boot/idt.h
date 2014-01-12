@@ -24,7 +24,7 @@ typedef struct idt idt_t;
 
 void idt_set_entry(uint8_t num, uint32_t isr_addr,
 		   uint16_t target_segment, uint8_t flags);
-void idt_load(void);
+void idt_load(void *ptr);
 void idt_init(void);
 
 #endif

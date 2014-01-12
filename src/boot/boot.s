@@ -3,6 +3,7 @@
 [EXTERN putc]
 [EXTERN vfb_clear]
 [EXTERN gdt_init]
+[EXTERN idt_init]
 [EXTERN k_start]                ; Kernel C start function.
 
 ;;; Constants
@@ -33,6 +34,10 @@ k_asm_entry:
 	cli                         ; Disable interrupts.	
 	push ebx
 	push eax
+	call vfb_clear
 	call gdt_init		    ; Initialise the GDT
+	call idt_init		    ; Initialise the IDT
 	call k_start                ; Call kernel start function
+	pop eax
+	pop eax
 	jmp $                       ; Infinite loop after kernel returns
