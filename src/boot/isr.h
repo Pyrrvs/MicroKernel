@@ -24,7 +24,8 @@ typedef struct registers
   uint32_t	ss;
 } registers_t;
 
-void isr_handler(registers_t regs);
 typedef void (*isr_t)(registers_t *regs);
+void isr_register(uint8_t num, isr_t handler);
+void isr_handler(registers_t regs);
 
 #endif
