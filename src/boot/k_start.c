@@ -11,10 +11,22 @@ int k_start(int code, multiboot_info_t * mBootInfo)
 	    " compliant bootloader\n");
     }
   printk("Kernel up and running\n");
+
+  printk(WARN_COLOR "Testing interrupts\n" DEF_COLOR);
   asm volatile ("int $0x0");
   asm volatile ("int $0x3");
-  printk(WARN_COLOR "Next interruption will cause a panic\n" DEF_COLOR);
-  asm volatile ("int $0x20");
-  printk("still alive\n");
+
+  printk(WARN_COLOR
+	 "Testing pagination (accessing memory higher than 0xC0000000)\n"
+	 DEF_COLOR);
+  char *str = "This string is located somewhere below 0x400000\n";
+  str += 0xC0000000;
+  puts(str);
+
+  printk(WARN_COLOR
+	 "Testing page fault (accessing 0x400001)\n"
+	 DEF_COLOR);
+  str = (char*)0x400001;
+  putc(str[0]);
   return 0xBABA;
 }

@@ -22,4 +22,15 @@ SECTIONS
     {
         *(.bss)
     }
+
+    .kstack ALIGN(4096) :
+    {
+	. += 0x4000;
+	*(.kstack)
+    }
+
+    .kpages ALIGN(4096) :
+    {
+	*(.initpages)
+    }
 }
