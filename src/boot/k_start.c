@@ -45,9 +45,9 @@ int k_start(int code, multiboot_info_t * mBootInfo)
 
 
   printk(WARN_COLOR
-	 "Testing page fault (accessing 0x400001)\n"
+	 "Testing page fault - (Writing on RO Page)\n"
 	 DEF_COLOR);
-  str = (char*)0xC0400000;
-  putc(str[0]);
+  str = (char*)0xC03FF000;
+  str[0] = 1;
   return 0xBABA;
 }

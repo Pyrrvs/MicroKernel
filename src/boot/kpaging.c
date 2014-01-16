@@ -32,7 +32,7 @@ void kpaging_fault(registers_t *regs)
   PANIC("Page fault");
 }
 
-void kpaging_init(void)
+static void _init_page_table(void)
 {
   page_t page;
 
@@ -42,18 +42,31 @@ void kpaging_init(void)
   for (int i = 0; i < 0x400000; i += PAGE_SIZE)
     {
       page.frame = i >> 12;
-      k_pagetable.pages[i/PAGE_SIZE] = page; /* PRES/RO/KERN. */ 
-    }      
+      k_pagetable.pages[i/PAGE_SIZE] = page; /* PRES/RW/USER. */ 
+    }
+  /* Making last page (0xC03FF000) RO for test purpose */
+  k_pagetable.pages[1023].writable = 0; /* PRES/RO/USER. */ 
+}
 
+void kpaging_init(void)
+{
+  page_directory_entry_t entry = {
+    .present = 1,
+    .writable = 1,
+    .user = 1,
+    .pwt = 0,
+    .pcd = 0,
+    .accessed = 0,
+    .unused = 0,
+    .table = (uint32_t)&k_pagetable >> 12
+  };
+
+  _init_page_table();
   k_pagedir.tables[0] = &k_pagetable;
-  /* PRST/RW/US */
-  k_pagedir.tablesPhysical[0] = ((uint32_t)&k_pagetable) | 0x7;
-
+  k_pagedir.entries[0] = entry;
   k_pagedir.tables[((KERNEL_ADDR >> 22) & 0x3FF)] = &k_pagetable;
-  /* PRST/RW/US */
-  k_pagedir.tablesPhysical[((KERNEL_ADDR >> 22) & 0x3FF)] = ((uint32_t)&k_pagetable) | 0x7;
-
+  k_pagedir.entries[((KERNEL_ADDR >> 22) & 0x3FF)] = entry;
   isr_register(0xE, kpaging_fault);
-  switch_page_directory(&k_pagedir.tablesPhysical);
+  switch_page_directory(&k_pagedir.entries);
   puts("Minimal paging initialized\n");
 }
