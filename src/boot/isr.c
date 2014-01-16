@@ -18,9 +18,16 @@ void isr_handler(registers_t regs)
     }
   if (handlers[regs.int_no])
     handlers[regs.int_no](&regs);
+  else
+    PANIC("Unhandled interruption\n");
 }
 
 void isr_register(uint8_t num, isr_t handler)
 {
   handlers[num] = handler;
+}
+
+void isr_unregister(uint8_t num)
+{
+  handlers[num] = NULL;
 }

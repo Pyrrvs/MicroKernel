@@ -4,9 +4,14 @@
 #include "3rdparty/multiboot.h"
 #include "boot/isr.h"
 
+void test_handler(registers_t *regs)
+{
+  puts("handler called\n");
+}
+
 void gp_handler(registers_t *regs)
 {
-  PANIC("Fuck that shit! I'm out of here!\n");
+  PANIC("General Protection Fault\n");
 }
 
 int k_start(int code, multiboot_info_t * mBootInfo)
@@ -17,11 +22,13 @@ int k_start(int code, multiboot_info_t * mBootInfo)
 	    " compliant bootloader\n");
     }
   printk("Kernel up and running\n");
-
+ 
   isr_register(0xD, gp_handler);
   printk(WARN_COLOR "Testing interrupts\n" DEF_COLOR);
+
+  isr_register(0x0, test_handler);
   asm volatile ("int $0x0");
-  asm volatile ("int $0x3");
+  isr_unregister(0x0);
 
   printk(WARN_COLOR
 	 "Testing pagination (accessing memory higher than 0xC0000000)\n"
@@ -40,7 +47,7 @@ int k_start(int code, multiboot_info_t * mBootInfo)
   printk(WARN_COLOR
 	 "Testing page fault (accessing 0x400001)\n"
 	 DEF_COLOR);
-  str = (char*)0x400001;
+  str = (char*)0xC0400000;
   putc(str[0]);
   return 0xBABA;
 }

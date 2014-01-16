@@ -14,11 +14,11 @@ void kpaging_fault(registers_t *regs)
   uint32_t faulting_address;
   asm volatile("mov %%cr2, %0" : "=r" (faulting_address));
 
-  int present   = !(regs->err_code & 0x1); // Page not present
-  int rw = regs->err_code & 0x2;           // Write operation?
-  int us = regs->err_code & 0x4;           // Processor was in user-mode?
-  int reserved = regs->err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
-  int id = regs->err_code & 0x10;          // Caused by an instruction fetch?
+  int present   = !(regs->err_code & 0x1);
+  int rw = regs->err_code & 0x2;
+  int us = regs->err_code & 0x4;
+  int reserved = regs->err_code & 0x8;
+  int id = regs->err_code & 0x10;
 
   // Output an error message.
   puts("Page fault! ( ");
@@ -37,13 +37,13 @@ void kpaging_init(void)
   page_t page;
 
   page.present = 1;
-  page.rw = 1;
+  page.writable = 1;
   page.user = 1;
   for (int i = 0; i < 0x400000; i += PAGE_SIZE)
     {
       page.frame = i >> 12;
       k_pagetable.pages[i/PAGE_SIZE] = page; /* PRES/RO/KERN. */ 
-    }
+    }      
 
   k_pagedir.tables[0] = &k_pagetable;
   /* PRST/RW/US */

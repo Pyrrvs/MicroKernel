@@ -26,6 +26,7 @@ typedef struct registers
 
 typedef void (*isr_t)(registers_t *regs);
 void isr_register(uint8_t num, isr_t handler);
+void isr_unregister(uint8_t num);
 void isr_handler(registers_t regs);
 
 #endif

@@ -21,7 +21,7 @@ void putnbr(int nbr)
     }
   else
     {
-      if (nbr > 10)
+      if (nbr >= 10)
 	putnbr(nbr / 10);
       putc((nbr % 10) + '0');      
     }

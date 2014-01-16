@@ -3,6 +3,10 @@
 
 # include "common/stdio.h"
 
+# ifndef NULL
+#  define NULL 0
+# endif
+
 # define PANIC(msg) do { puts(ERR_COLOR msg); while (1); } while (0);
 
 #endif
