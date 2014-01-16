@@ -2,34 +2,38 @@ ENTRY(k_asm_entry)
 OUTPUT_FORMAT(elf32-i386)
 SECTIONS
 {
-    . = 0x100000;
-    .text ALIGN(4096) :
+    /* The kernel will live at 3GB + 1MB in the virtual
+      address space, which will be mapped to 1MB in the
+      physical address space. */
+    . = 0xC0100000;
+
+    .text ALIGN(0x1000) : AT(ADDR(.text) - 0xC0000000)
     {
         *(.text)
     }
 
-    .rodata ALIGN(4096) :
+    .rodata ALIGN(0x1000) : AT(ADDR(.rodata) - 0xC0000000)
     {
 	*(.rodata)
     }
 
-    .data ALIGN(4096) :
+    .data ALIGN(0x1000) : AT(ADDR(.data) - 0xC0000000)
     {
         *(.data)
     }
 
-    .bss ALIGN(4096) :
+    .bss ALIGN(0x1000) : AT(ADDR(.bss) - 0xC0000000)
     {
         *(.bss)
     }
 
-    .kstack ALIGN(4096) :
+    .kstack ALIGN(0x1000) : AT(ADDR(.kstack) - 0xC0000000)
     {
 	. += 0x4000;
 	*(.kstack)
     }
 
-    .kpages ALIGN(4096) :
+    .kpages ALIGN(0x1000) : AT(ADDR(.kpages) - 0xC0000000)
     {
 	*(.initpages)
     }
