@@ -14,7 +14,7 @@ void gp_handler(registers_t *regs)
   PANIC("General Protection Fault\n");
 }
 
-int k_start(int code, multiboot_info_t * mBootInfo)
+int kstart(int code, multiboot_info_t * mBootInfo)
 {
   if (code != MULTIBOOT_BOOTLOADER_MAGIC)
     {
@@ -22,7 +22,6 @@ int k_start(int code, multiboot_info_t * mBootInfo)
 	    " compliant bootloader\n");
     }
   printk("Kernel up and running\n");
- 
   isr_register(0xD, gp_handler);
   printk(WARN_COLOR "Testing interrupts\n" DEF_COLOR);
 
@@ -31,23 +30,9 @@ int k_start(int code, multiboot_info_t * mBootInfo)
   isr_unregister(0x0);
 
   printk(WARN_COLOR
-	 "Testing pagination (accessing memory higher than 0xC0000000)\n"
-	 DEF_COLOR);
-  char *str = "This string is located somewhere below 0x400000\n";
-  str += 0xC0000000;
-  puts(str);
-
-  printk(WARN_COLOR
-	 "Testing pagination (writing in memory higher than 0xC0000000)\n"
-	 DEF_COLOR);
-  str[5] = '$';
-  puts(str);
-
-
-  printk(WARN_COLOR
 	 "Testing page fault - (Writing on RO Page)\n"
 	 DEF_COLOR);
-  str = (char*)0xC03FF000;
+  char *str = (char*)0xC03FF000;
   str[0] = 1;
   return 0xBABA;
 }

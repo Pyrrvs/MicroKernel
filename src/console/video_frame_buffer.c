@@ -1,6 +1,7 @@
 #include "common/stdio.h"
 #include "common/string.h"
 #include "common/stdlib.h"
+#include "common/kernel.h"
 #include "io/lowlevel_io.h"
 #include "console/video_frame_buffer.h"
 
@@ -8,7 +9,7 @@
 static struct s_vfb g_vfb = {
   .pos = { .x = 0, .y = 0},
   .color = 0x07,
-  .base = VID_FRAME_BUF,
+  .base = VID_FRAME_BUF + KERNEL_VIRTUAL_BASE,
   .is_esc_seq = 0,
   .esc_buf_ndx = 0,
 };

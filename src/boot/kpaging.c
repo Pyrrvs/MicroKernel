@@ -4,10 +4,9 @@
 #include "boot/isr.h"
 
 /* Define it here for the moment */
-# define KERNEL_ADDR 0xC0000000
 
-page_directory_t k_pagedir __attribute__((aligned(4096))) __attribute__((section("kpages")));
-page_table_t k_pagetable __attribute__((aligned(4096))) __attribute__((section("kpages")));
+page_directory_entry_t k_pagedir[1024] __attribute__((aligned(4096)));
+page_table_t k_pagetable __attribute__((aligned(4096)));
 
 void kpaging_fault(registers_t *regs)
 {
@@ -53,20 +52,18 @@ void kpaging_init(void)
   page_directory_entry_t entry = {
     .present = 1,
     .writable = 1,
-    .user = 1,
+    .user = 0,
     .pwt = 0,
     .pcd = 0,
     .accessed = 0,
     .unused = 0,
-    .table = (uint32_t)&k_pagetable >> 12
+    .table = ((uint32_t)&k_pagetable - KERNEL_VIRTUAL_BASE) >> 12
   };
 
   _init_page_table();
-  k_pagedir.tables[0] = &k_pagetable;
-  k_pagedir.entries[0] = entry;
-  k_pagedir.tables[((KERNEL_ADDR >> 22) & 0x3FF)] = &k_pagetable;
-  k_pagedir.entries[((KERNEL_ADDR >> 22) & 0x3FF)] = entry;
+  k_pagedir[0].value = 0;
+  k_pagedir[(KERNEL_VIRTUAL_BASE >> 22)] = entry;
   isr_register(0xE, kpaging_fault);
-  switch_page_directory(&k_pagedir.entries);
+  switch_page_directory(((char*)&k_pagedir) - KERNEL_VIRTUAL_BASE);
   puts("Minimal paging initialized\n");
 }
