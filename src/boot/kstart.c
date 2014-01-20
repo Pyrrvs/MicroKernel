@@ -6,7 +6,10 @@
 
 void test_handler(registers_t *regs)
 {
-  puts("handler called\n");
+  puts(SUCC_COLOR "Called from userland\n" DEF_COLOR);
+  char *str = (char*)0xC03FF000;
+  str[0] = '$';
+  puts("gasd\n");
 }
 
 void gp_handler(registers_t *regs)
@@ -22,17 +25,13 @@ int kstart(int code, multiboot_info_t * mBootInfo)
 	    " compliant bootloader\n");
     }
   printk("Kernel up and running\n");
+
   isr_register(0xD, gp_handler);
-  printk(WARN_COLOR "Testing interrupts\n" DEF_COLOR);
 
-  isr_register(0x0, test_handler);
-  asm volatile ("int $0x0");
-  isr_unregister(0x0);
-
-  printk(WARN_COLOR
-	 "Testing page fault - (Writing on RO Page)\n"
-	 DEF_COLOR);
-  char *str = (char*)0xC03FF000;
-  str[0] = 1;
+  printk(WARN_COLOR "Testing context switch\n" DEF_COLOR);
+  isr_register(0x80, test_handler);
+  test_switch();
+  isr_unregister(0x80);
+  
   return 0xBABA;
 }

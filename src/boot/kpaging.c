@@ -26,7 +26,7 @@ void kpaging_fault(registers_t *regs)
   if (us) {puts("user-mode ");}
   if (reserved) {puts("reserved ");}
   puts(") at 0x");
-  putnbr(faulting_address);
+  putunbr_base(faulting_address, HEX_BASE);
   puts("\n");
   PANIC("Page fault");
 }
@@ -35,6 +35,7 @@ static void _init_page_table(void)
 {
   page_t page;
 
+  page.value = 0;
   page.present = 1;
   page.writable = 1;
   page.user = 1;
@@ -44,7 +45,9 @@ static void _init_page_table(void)
       k_pagetable.pages[i/PAGE_SIZE] = page; /* PRES/RW/USER. */ 
     }
   /* Making last page (0xC03FF000) RO for test purpose */
-  k_pagetable.pages[1023].writable = 0; /* PRES/RO/USER. */ 
+  /* k_pagetable.pages[1023].writable = 0; /\* PRES/RO/USER. *\/  */
+  /* Making last page (0xC03FF000) system only for test purpose */
+  k_pagetable.pages[1023].user = 0; /* PRES/RO/USER. */
 }
 
 void kpaging_init(void)
@@ -52,7 +55,7 @@ void kpaging_init(void)
   page_directory_entry_t entry = {
     .present = 1,
     .writable = 1,
-    .user = 0,
+    .user = 1,
     .pwt = 0,
     .pcd = 0,
     .accessed = 0,

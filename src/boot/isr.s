@@ -2,8 +2,8 @@
 	[GLOBAL isr%1]		; %1 accesses the first parameter.
 isr%1:
 	cli
-	push byte 0
-	push byte %1
+	push 0
+	push %1
 	jmp isr_common_stub
 %endmacro
 
@@ -11,7 +11,7 @@ isr%1:
 	[GLOBAL isr%1]
 isr%1:
 	cli
-	push byte %1
+	push %1
 	jmp isr_common_stub
 %endmacro
 
@@ -49,6 +49,8 @@ ISR_NOERRCODE 28
 ISR_NOERRCODE 29
 ISR_NOERRCODE 30
 ISR_NOERRCODE 31
+
+ISR_NOERRCODE 128
 
 [EXTERN isr_handler]
 isr_common_stub:

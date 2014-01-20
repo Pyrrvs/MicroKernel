@@ -60,4 +60,6 @@ extern void isr29(void);
 extern void isr30(void);
 extern void isr31(void);
 
+extern void isr128(void);
+
 #endif
