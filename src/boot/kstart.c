@@ -19,11 +19,14 @@ void gp_handler(registers_t *regs)
 
 int kstart(int code, multiboot_info_t * mBootInfo)
 {
+  printk("\n\n [ %s ]  = %d \n\n", "La vie L'univers et tout le reste", 42);
+
   if (code != MULTIBOOT_BOOTLOADER_MAGIC)
-    {
-      PANIC("Kernel need to be loaded by a multiboot"
-	    " compliant bootloader\n");
-    }
+  {
+    PANIC("Kernel need to be loaded by a multiboot"
+	" compliant bootloader\n");
+  }
+
   printk("Kernel up and running\n");
 
   isr_register(0xD, gp_handler);
@@ -32,6 +35,6 @@ int kstart(int code, multiboot_info_t * mBootInfo)
   isr_register(0x80, test_handler);
   test_switch();
   isr_unregister(0x80);
-  
+
   return 0xBABA;
 }
