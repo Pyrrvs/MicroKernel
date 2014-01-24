@@ -1,14 +1,14 @@
 # include "common/string.h"
-# include "io/screen_io.h"
+# include "io/vfb.h"
 
 void putc(char c)
 {
-  write_screen(&c, 1);
+  vfb_write(&c, 1);
 }
 
 void puts(const char *str)
 {
-  write_screen(str, strlen(str));
+  vfb_write(str, strlen(str));
 }
 
 void putnbr(int nbr)

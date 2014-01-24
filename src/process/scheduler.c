@@ -1,6 +1,6 @@
-#include "boot/gdt.h"
 #include "common/string.h"
 #include "common/stdio.h"
+#include "process/scheduler.h"
 
 extern void *tss0Label asm("tss0");
 tss_t *gl_tss0 = (tss_t*)&tss0Label;

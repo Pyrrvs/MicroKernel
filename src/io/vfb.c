@@ -3,7 +3,7 @@
 #include "common/stdlib.h"
 #include "common/kernel.h"
 #include "io/lowlevel_io.h"
-#include "console/video_frame_buffer.h"
+#include "io/vfb.h"
 
 /* Make it thread safe when synch mechanism available */
 static struct s_vfb g_vfb = {
