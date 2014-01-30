@@ -5,7 +5,7 @@
 void printk(char const *s, ...)
 {
     va_list args;
-    unsigned int i, len, addr;
+    unsigned int i, len, uval;
     int val;
     char *str;
 
@@ -18,6 +18,10 @@ void printk(char const *s, ...)
             i = i + 1;
             switch (s[i])
             {
+            case 'u':
+                uval = va_arg(args, unsigned int);
+                putunbr(uval);
+                break;
             case 'd':
                 val = va_arg(args, int);
                 putnbr(val);
@@ -27,8 +31,10 @@ void printk(char const *s, ...)
                 puts(str);
                 break;
             case 'x':
-                addr = va_arg(args, unsigned int);
-                putunbr_base(addr, HEX_BASE);
+                puts("0x");
+                uval = va_arg(args, unsigned int);
+                putunbr_base(uval, HEX_BASE);
+                break;
             default:
                 putc(s[i]);
                 break;

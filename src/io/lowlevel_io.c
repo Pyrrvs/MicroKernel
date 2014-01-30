@@ -19,19 +19,19 @@ uint8_t inb(uint16_t port)
 {
   int val;
   /* asm volatile ("inb %1, %0": "=a" (val), "Nd" (port)); */
-  return val;
+  return 0;
 }
 
 uint16_t inw(uint16_t port)
 {
   int val;
   /* asm volatile ("inw %1, %0": "=a" (val), "Nd" (port)); */
-  return val;
+  return 0;
 }
 
 uint32_t ind(uint16_t port)
 {
   int val;
   /* asm volatile ("ind %1, %0": "=a" (val), "Nd" (port)); */
-  return val;
+  return 0;
 }
