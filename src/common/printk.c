@@ -1,7 +1,6 @@
 #include "common/varargs.h"
 #include "common/string.h"
 #include "common/stdio.h"
-#include "console/video_frame_buffer.h"
 
 void printk(char const *s, ...)
 {
@@ -15,18 +14,16 @@ void printk(char const *s, ...)
   for (i = 0; i < len; ++i)
     {
       if (s[i] == '%')
-	     {
-	       i = i + 1;
-	       switch (s[i])
-          {
-      case 'd':
+	{
+	  i = i + 1;
+	  switch (s[i])
+	    {
+	    case 'd':
 	      val = va_arg(args, int);
 	      putnbr(val);
 	      break;
 	    case 's':
-	      
 	      str = va_arg(args, char*);
-	      putnbr((int)str);
 	      puts(str);
 	      break;
 	    default:
@@ -35,6 +32,6 @@ void printk(char const *s, ...)
 	    }
 	}
       else
-		putc(s[i]);
+	putc(s[i]);
     }
 }

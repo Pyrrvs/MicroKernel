@@ -1,14 +1,15 @@
 #include "common/stdio.h"
 #include "common/string.h"
 #include "common/stdlib.h"
+#include "common/kernel.h"
 #include "io/lowlevel_io.h"
-#include "console/video_frame_buffer.h"
+#include "io/vfb.h"
 
 /* Make it thread safe when synch mechanism available */
 static struct s_vfb g_vfb = {
   .pos = { .x = 0, .y = 0},
   .color = 0x07,
-  .base = VID_FRAME_BUF,
+  .base = VID_FRAME_BUF + KERNEL_VIRTUAL_BASE,
   .is_esc_seq = 0,
   .esc_buf_ndx = 0,
 };
@@ -100,10 +101,26 @@ static inline void _back_cursor(void)
     --g_vfb.pos.x;
 }
 
+static inline void _scroll_up(void)
+{
+  for (int i = 0; i < NB_LINE*NB_COL; ++i)
+    {
+      if (i < (NB_LINE - 1) * 80)
+	g_vfb.base[i] = g_vfb.base[i + NB_COL];
+      else
+	g_vfb.base[i] = ' ' | (((0 << 4) | (15 & 0x0F)) << 8);
+    }
+  g_vfb.pos.y = NB_LINE - 1;
+  g_vfb.pos.x = 0;
+}
+
 static inline void _add_newline(void)
 {
   g_vfb.pos.x = 0;
-  ++g_vfb.pos.y;
+  if (g_vfb.pos.y < NB_LINE - 1)
+    ++g_vfb.pos.y;
+  else
+    _scroll_up();
 }
 
 static inline void _putc(char c)
