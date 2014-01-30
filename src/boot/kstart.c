@@ -17,6 +17,7 @@ int kstart(int code, multiboot_info_t * mBootInfo)
 	" compliant bootloader\n");
   }
   printk("Kernel up and running\n");
+  printk("%x\n", 42);
 
   return 0xDEAD;
 }
