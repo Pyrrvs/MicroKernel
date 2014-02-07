@@ -19,6 +19,7 @@ int kstart(int code, multiboot_info_t * mboot_info)
 	" compliant bootloader\n");
   }
   printk("Kernel up and running\n");
+  printk("Size of unsigned long long %d\n", sizeof(unsigned long long));
   mm_init(mboot_info);
   return 0xDEAD;
 }

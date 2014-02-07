@@ -40,8 +40,21 @@ int mm_init(multiboot_info_t * mboot_info)
 
       MMAP_FOREACH(ent, mboot_info->mmap_addr, mboot_info->mmap_length)
 	{
-      	  printk("\tEntry: size [%u] ;  addr [%x] ; len [%u] ; type [%x]",
-      		 ent->size, ent->addr, ent->len, ent->type);
+	  char *str;
+	  uint64_t len = ent->len;
+	  int i;
+	  for (i = 0, len = ent->len; i < 4 && len / 1024; len /= 1024)
+	    ++i;
+	  if (i == 0)
+	    str = "B";
+	  else if (i == 1)
+	    str = "KB";
+	  else if (i == 2)
+	    str = "MB";
+	  else
+	    str = "GB";
+	  printk("\tEntry: size [%u] ;  addr [%lx] ; len [%lu%s] ; type [%x]",
+      		 ent->size, ent->addr, len, str, ent->type);
       	  if (ent->type & MULTIBOOT_MEMORY_AVAILABLE)
       	    printk(" ; available");
       	  if (ent->type & MULTIBOOT_MEMORY_RESERVED)

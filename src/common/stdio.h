@@ -11,9 +11,12 @@
 void putc(char c);
 void puts(const char *str);
 void putnbr(int nbr);
+void putlnbr(long long nbr);
 void putnbr_base(int nbr, const char *base);
 void putunbr(int nbr);
+void putlunbr(unsigned long long nbr);
 void putunbr_base(unsigned int nbr, const char *base);
+void putlunbr_base(unsigned long long nbr, const char *base);
 void printk(char const *s, ...);
 
 #endif
