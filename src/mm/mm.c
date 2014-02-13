@@ -2,11 +2,33 @@
 #include "common/stdio.h"
 #include "mm/mm.h"
 #include "common/kernel.h"
+#include "common/string.h"
 
 mem_info_t g_mem_info;
 
 extern char *kernel_end;
 void *kernel_end_ptr = ((char *)&kernel_end) - KERNEL_VIRTUAL_BASE + sizeof(char*);
+
+static int _init_heap(void)
+{
+  int reserved_pages;
+
+  g_mem_info.phys.heap.nb_pages = (g_mem_info.phys.heap.end_addr - g_mem_info.phys.heap.start_addr + 1) / 0x1000;
+
+  reserved_pages = g_mem_info.phys.heap.nb_pages / 8;
+  reserved_pages = (reserved_pages % 0x1000)
+    ? reserved_pages / 0x1000 + 1
+    : reserved_pages / 0x1000;
+  g_mem_info.phys.heap.page_bf = (void*)(g_mem_info.phys.heap.start_addr
+                                        + KERNEL_VIRTUAL_BASE);
+  memset(g_mem_info.phys.heap.page_bf, 0, reserved_pages);
+  printk("=> %d\n", reserved_pages);
+  for (int i = 0; i < reserved_pages; ++i)
+  {
+    MARK_USED(i);
+    printk("PAGE %d is used [%d]\n", i, PAGE_STATE(i));
+  }
+}
 
 int mm_init(multiboot_info_t * mboot_info)
 {
@@ -59,7 +81,7 @@ int mm_init(multiboot_info_t * mboot_info)
   g_mem_info.phys.total_size = mboot_info->mem_upper * 1024 + 1;
   g_mem_info.phys.higher_addr = mboot_info->mem_upper * 1024;
 
-  //_init_heap();
+  _init_heap();
 
 
   /* printk(INFO_COLOR "Multiboot memory info:\n" DEF_COLOR); */
