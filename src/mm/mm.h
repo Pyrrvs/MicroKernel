@@ -9,6 +9,11 @@ typedef struct mem_info
   struct {
     uint32_t total_size;
     uint32_t higher_addr;
+    struct {
+      uint32_t start_addr;
+      uint32_t end_addr;
+      uint32_t *frames;
+    } heap;
   } phys;
 } mem_info_t;
 
