@@ -27,5 +27,10 @@ SECTIONS
         *(.bss)
 		}
 
+    .services ALIGN(0x1000) : AT(ADDR(.services) - 0xC0000000)
+    {
+      *(.services)
+    }
+
 		kernel_end = .;
 }

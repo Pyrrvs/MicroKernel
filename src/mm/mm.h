@@ -14,6 +14,8 @@
 # define PAGE_STATE(PAGE) (g_mem_info.phys.heap.page_bf[PAGE / 32] & (1 << (PAGE % 32))) \
   >> (PAGE % 32)
 
+# define PAGE_ADDR(PAGE) ((void*)(g_mem_info.phys.heap.start_addr + (PAGE * 0x1000)))
+
 typedef struct mem_info
 {
   struct {

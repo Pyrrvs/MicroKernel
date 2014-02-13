@@ -9,6 +9,30 @@ mem_info_t g_mem_info;
 extern char *kernel_end;
 void *kernel_end_ptr = ((char *)&kernel_end) - KERNEL_VIRTUAL_BASE + sizeof(char*);
 
+void *mem_alloc(uint32_t size)
+{
+  int nb_pages = size / 0x1001 + 1;
+
+  for (int i = 0; i < g_mem_info.phys.heap.nb_pages - nb_pages; i++) {
+    int found = 1;
+
+    for (int j = i; j < i + nb_pages; j++) {
+      if (PAGE_STATE(i) == PAGE_USED)
+      {
+        found = 0;
+        break;
+      }
+    }
+
+    if (found) {
+      for (int j = i; j < i + nb_pages; j++) {
+        MARK_USED(j);
+      }
+      return PAGE_ADDR(i);
+    }
+  }
+}
+
 static int _init_heap(void)
 {
   int reserved_pages;
