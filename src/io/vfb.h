@@ -6,6 +6,7 @@
 # define VID_FRAME_BUF (void*)0xB8000
 # define NB_LINE 25
 # define NB_COL 80
+# define TAB_WIDTH 2
 
 struct s_vfb {
   struct {

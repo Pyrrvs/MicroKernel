@@ -14,7 +14,8 @@ SET(CMAKE_C_LINK_EXECUTABLE "/usr/bin/ld <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJE
 SET(ASM_SRCS src/boot/boot.s src/boot/gdt.s src/boot/idt.s src/boot/isr.s src/mm/paging.s)
 SET(C_SRCS src/boot/kstart.c src/io/vfb.c src/io/lowlevel_io.c src/common/printk.c
   src/common/stdio.c src/common/string.c src/common/stdlib.c src/boot/idt.c src/boot/isr.c
-  src/boot/kpaging.c src/process/scheduler.c)
+  src/boot/kpaging.c src/process/scheduler.c src/mm/mm.c src/common/div64.c
+  src/process/services.c)
 
 SET_PROPERTY(SOURCE ${ASM_SRCS} PROPERTY LANGUAGE ASM_NASM)
 

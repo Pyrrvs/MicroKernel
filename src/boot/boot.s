@@ -15,7 +15,15 @@ MBOOT_HEADER_FLAGS	equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
 MBOOT_CHECKSUM		equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 KERNEL_VIRTUAL_BASE	equ 0xC0000000
 KERNEL_PAGE_OFFSET	equ (KERNEL_VIRTUAL_BASE >> 20)
-		
+
+
+[GLOBAL services_start]
+[GLOBAL services_end]
+[SECTION .services]
+services_start:
+  resb 0x5000
+services_end:
+
 [SECTION .bss]
 ALIGN 8
 startupStack:

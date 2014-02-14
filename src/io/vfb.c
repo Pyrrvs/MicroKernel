@@ -95,12 +95,6 @@ static inline void _carriage_return(void)
   g_vfb.pos.x = 0;
 }
 
-static inline void _back_cursor(void)
-{
-  if (g_vfb.pos.x > 0)
-    --g_vfb.pos.x;
-}
-
 static inline void _scroll_up(void)
 {
   for (int i = 0; i < NB_LINE*NB_COL; ++i)
@@ -123,11 +117,22 @@ static inline void _add_newline(void)
     _scroll_up();
 }
 
+static inline void _dec_cursor(void)
+{
+  if (g_vfb.pos.x > 0)
+    --g_vfb.pos.x;
+}
+
+static inline void _inc_cursor(void)
+{
+  if (++g_vfb.pos.x == NB_COL)
+    _add_newline();
+}
+
 static inline void _putc(char c)
 {
   g_vfb.base[g_vfb.pos.y * NB_COL + g_vfb.pos.x] = (g_vfb.color << 8) | c;
-  if (++g_vfb.pos.x == NB_COL)
-    _add_newline();
+  _inc_cursor();
 }
 
 ssize_t vfb_write(const char *str, size_t count)
@@ -148,7 +153,10 @@ ssize_t vfb_write(const char *str, size_t count)
     else if (str[i] == '\n')
       _add_newline();
     else if (str[i] == '\b')
-      _back_cursor();
+      _dec_cursor(); 
+    else if (str[i] == '\t')
+      for (int j = 0; j < TAB_WIDTH; ++j)
+	_inc_cursor();
     else if (str[i] == '\r')
       _carriage_return();
     else
